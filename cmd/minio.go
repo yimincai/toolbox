@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/yimincai/toolbox/internal/minio"
+	"github.com/yimincai/toolbox/pkg/logger"
 	"os"
 	"unicode"
 	"unicode/utf8"
@@ -58,7 +59,7 @@ var minioCmd = &cobra.Command{
 		case "Upload":
 			minio.UploadBucket()
 		default:
-			fmt.Println("Input error.")
+			logger.Red("Input error")
 		}
 	},
 }

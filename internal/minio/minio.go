@@ -8,6 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/yimincai/toolbox/pkg/logger"
 	"io/fs"
 	"log"
 	"os"
@@ -40,10 +41,10 @@ func newEnv() *Env {
 
 	err := viper.ReadInConfig()
 	if err == nil {
-		log.Println("Using environment config file:", viper.ConfigFileUsed())
+		logger.Blue(fmt.Sprintf("Using environment config file: %s", viper.ConfigFileUsed()))
 	}
 	if err != nil {
-		log.Println("Use environment variable")
+		logger.Blue("Use environment variable")
 		viper.AutomaticEnv()
 		_ = viper.BindEnv("PRINT_ENV")
 		_ = viper.BindEnv("MINIO_ENDPOINT")
@@ -73,6 +74,8 @@ func prettyPrint(i interface{}) string {
 }
 
 func newMinioClient(env *Env) *minio.Client {
+	logger.Green(fmt.Sprintf("Initializing Minio client on %s using %s bucket", env.Endpoint+":"+env.Port, env.BucketName))
+
 	// Initialize Minio client object
 	minioClient, err := minio.New(env.Endpoint+":"+env.Port, &minio.Options{
 		Creds:  credentials.NewStaticV4(env.User, env.Password, ""),
@@ -105,7 +108,7 @@ func DumpBucket() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("All files in destination directory deleted.")
+	logger.Green("All files in destination directory deleted.")
 
 	// Download objects from the bucket
 	for object := range objectCh {
@@ -124,13 +127,13 @@ func DumpBucket() {
 		// Download object
 		err := minioClient.FGetObject(ctx, env.BucketName, objectName, destinationPath, minio.GetObjectOptions{})
 		if err != nil {
-			log.Printf("Error downloading object %s: %v\n", objectName, err)
+			logger.Red(fmt.Sprintf("Error downloading object %s: %v", objectName, err))
 		} else {
-			log.Printf("Downloaded: %s\n", objectName)
+			logger.Yellow(fmt.Sprintf("Bucket %s Downloaded: %s", env.BucketName, objectName))
 		}
 	}
 
-	log.Print("Bucket dump completed.")
+	log.Printf("Bucket %s dump completed.", env.BucketName)
 }
 
 func DeleteBucket() {
@@ -151,9 +154,9 @@ func DeleteBucket() {
 		objectName := object.Key
 		err := minioClient.RemoveObject(ctx, env.BucketName, objectName, minio.RemoveObjectOptions{})
 		if err != nil {
-			log.Printf("Error deleting object %s: %v\n", objectName, err)
+			logger.Red(fmt.Sprintf("Error deleting object %s: %v", objectName, err))
 		} else {
-			log.Printf("Deleted: %s\n", objectName)
+			logger.Yellow(fmt.Sprintf("Bucket %s Deleted: %s", env.BucketName, objectName))
 		}
 	}
 
@@ -185,10 +188,10 @@ func UploadBucket() {
 			// Upload the file to the Minio bucket
 			_, err = minioClient.PutObject(context.Background(), env.BucketName, objectName, file, fileInfo.Size(), minio.PutObjectOptions{})
 			if err != nil {
+				logger.Red(fmt.Sprintf("Error uploading object %s: %v", objectName, err))
 				return err
 			}
-
-			fmt.Printf("Uploaded: %s\n", objectName)
+			logger.Yellow(fmt.Sprintf("Bucket %s Uploaded: %s", env.BucketName, objectName))
 		}
 		return nil
 	})
@@ -196,7 +199,7 @@ func UploadBucket() {
 		log.Fatalln("Error restoring files:", err)
 	}
 
-	fmt.Println("Upload completed.")
+	log.Println("Upload completed.")
 }
 
 func RestoreBucket() {
@@ -217,9 +220,9 @@ func RestoreBucket() {
 		objectName := object.Key
 		err := minioClient.RemoveObject(ctx, env.BucketName, objectName, minio.RemoveObjectOptions{})
 		if err != nil {
-			log.Printf("Error deleting object %s: %v\n", objectName, err)
+			logger.Red(fmt.Sprintf("Error deleting object %s: %v", objectName, err))
 		} else {
-			log.Printf("Deleted: %s\n", objectName)
+			logger.Yellow(fmt.Sprintf("Bucket %s Deleted: %s", env.BucketName, objectName))
 		}
 	}
 
@@ -248,8 +251,7 @@ func RestoreBucket() {
 			if err != nil {
 				return err
 			}
-
-			fmt.Printf("Restored: %s\n", objectName)
+			logger.Yellow(fmt.Sprintf("Bucket %s Restored: %s", env.BucketName, objectName))
 		}
 		return nil
 	})
@@ -257,5 +259,5 @@ func RestoreBucket() {
 		log.Fatalln("Error restoring files:", err)
 	}
 
-	fmt.Println("Restoration completed.")
+	log.Println("Restoration completed.")
 }
