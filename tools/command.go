@@ -1,19 +1,19 @@
 /*
-Copyright © 2023 yimincai <bravc29229@gmail.com>
-*/
+ * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
+ */
+
 package tools
 
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"os/exec"
-
 	_ "github.com/dimiro1/banner/autoload"
 	"github.com/fatih/color"
+	"os"
+	"os/exec"
 )
 
-// By default shell will using bash
+// By default, shell will be using bash
 func commandOut(command string, shell string) (string, string, error) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer

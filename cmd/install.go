@@ -1,19 +1,20 @@
 /*
-Copyright © 2023 yimincai <bravc29229@gmail.com>
-*/
+ * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
+ */
+
 package cmd
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/yimincai/toolbox/installer"
+	"github.com/yimincai/toolbox/script"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
-// installCmd represents the install command
+// installCmd represents the installation command
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install applications.",
@@ -52,7 +53,7 @@ var installCmd = &cobra.Command{
 
 			switch application {
 			case "Docker":
-				installer.UbuntuInstallDocker()
+				script.UbuntuInstallDocker()
 			}
 
 		default:

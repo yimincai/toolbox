@@ -1,6 +1,7 @@
 /*
-Copyright © 2023 yimincai <bravc29229@gmail.com>
-*/
+ * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
+ */
+
 package main
 
 import (
