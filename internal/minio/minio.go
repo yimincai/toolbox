@@ -100,6 +100,13 @@ func DumpBucket() {
 		log.Fatalf("Error creating destination directory: %v\n", err)
 	}
 
+	// Delete all files in destination directory
+	err := os.RemoveAll(DestinationDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("All files in destination directory deleted.")
+
 	// Download objects from the bucket
 	for object := range objectCh {
 		if object.Err != nil {
