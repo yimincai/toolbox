@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/yimincai/toolbox/internal/minio"
 	"os"
 	"unicode"
 	"unicode/utf8"
@@ -42,20 +43,20 @@ var minioCmd = &cobra.Command{
 		}
 
 		if len(args) == 2 {
-			pkg.DestinationDir = args[1]
+			minio.DestinationDir = args[1]
 		}
 
 		switch op {
 		case "Cancel":
 			os.Exit(0)
 		case "Dump":
-			pkg.DumpMinioBucket()
+			minio.DumpBucket()
 		case "Delete":
-			pkg.DeleteMinioBucket()
+			minio.DeleteBucket()
 		case "Restore":
-			pkg.MinioRestore()
+			minio.RestoreBucket()
 		case "Upload":
-			pkg.UploadMinioBucket()
+			minio.UploadBucket()
 		default:
 			fmt.Println("Input error.")
 		}

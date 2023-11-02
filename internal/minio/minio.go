@@ -2,7 +2,7 @@
  * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
  */
 
-package pkg
+package minio
 
 import (
 	"context"
@@ -85,7 +85,7 @@ func newMinioClient(env *Env) *minio.Client {
 	return minioClient
 }
 
-func DumpMinioBucket() {
+func DumpBucket() {
 	env := newEnv()
 	minioClient := newMinioClient(env)
 
@@ -126,7 +126,7 @@ func DumpMinioBucket() {
 	log.Print("Bucket dump completed.")
 }
 
-func DeleteMinioBucket() {
+func DeleteBucket() {
 	env := newEnv()
 	minioClient := newMinioClient(env)
 
@@ -153,7 +153,7 @@ func DeleteMinioBucket() {
 	log.Print("Bucket cleanup completed.")
 }
 
-func UploadMinioBucket() {
+func UploadBucket() {
 	env := newEnv()
 	minioClient := newMinioClient(env)
 
@@ -192,7 +192,7 @@ func UploadMinioBucket() {
 	fmt.Println("Upload completed.")
 }
 
-func MinioRestore() {
+func RestoreBucket() {
 	env := newEnv()
 	minioClient := newMinioClient(env)
 

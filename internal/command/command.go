@@ -2,7 +2,7 @@
  * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
  */
 
-package pkg
+package command
 
 import (
 	"bytes"
@@ -29,7 +29,7 @@ func commandOut(command string, shell string) (string, string, error) {
 	return stdout.String(), stderr.String(), err
 }
 
-func RunCommand(command string, showCommand bool) {
+func Run(command string, showCommand bool) {
 	if showCommand {
 		color.HiBlue("$ %v", command)
 	}
@@ -48,7 +48,7 @@ func RunCommand(command string, showCommand bool) {
 	}
 }
 
-func ReturnCommand(command string, showCommand bool) string {
+func Return(command string, showCommand bool) string {
 	if showCommand {
 		color.HiBlue("$ %v", command)
 	}

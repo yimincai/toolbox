@@ -2,7 +2,7 @@
  * Copyright (c) 2023. yimincai(Neil) <bravc29229@gmail.com>.
  */
 
-package pkg
+package ip
 
 import (
 	"fmt"

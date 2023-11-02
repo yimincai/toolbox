@@ -6,29 +6,31 @@ package script
 
 import (
 	"fmt"
+	"github.com/yimincai/toolbox/internal/command"
+	"github.com/yimincai/toolbox/pkg/logger"
 	"github.com/yimincai/toolbox/utils"
 )
 
 func UbuntuInstallDocker() {
-	pkg.PrintConsole("Install Docker ... ")
+	logger.Console("Install Docker ... ")
 
-	pkg.RunCommand("sudo apt-get update -y", false)
-	pkg.RunCommand("sudo apt-get install ca-certificates curl gnupg -y", false)
-	pkg.RunCommand("sudo install -m 0755 -d /etc/apt/keyrings", false)
-	pkg.RunCommand("curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg", false)
-	pkg.RunCommand("sudo chmod a+r /etc/apt/keyrings/docker.gpg", false)
-	pkg.RunCommand("echo \\\n  \"deb [arch=\"$(dpkg --print-architecture)\" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \\\n  \"$(. /etc/os-release && echo \"$VERSION_CODENAME\")\" stable\" | \\\n  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null", false)
-	pkg.RunCommand("sudo apt-get update -y", false)
-	pkg.RunCommand("sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y", false)
-	pkg.RunCommand("sudo groupadd -f docker", false)
+	command.Run("sudo apt-get update -y", false)
+	command.Run("sudo apt-get install ca-certificates curl gnupg -y", false)
+	command.Run("sudo install -m 0755 -d /etc/apt/keyrings", false)
+	command.Run("curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg", false)
+	command.Run("sudo chmod a+r /etc/apt/keyrings/docker.gpg", false)
+	command.Run("echo \\\n  \"deb [arch=\"$(dpkg --print-architecture)\" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \\\n  \"$(. /etc/os-release && echo \"$VERSION_CODENAME\")\" stable\" | \\\n  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null", false)
+	command.Run("sudo apt-get update -y", false)
+	command.Run("sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y", false)
+	command.Run("sudo groupadd -f docker", false)
 	// Get real username
 	user := utils.GetUsername()
-	pkg.RunCommand(fmt.Sprintf("sudo usermod -aG docker %v", user), false)
-	pkg.RunCommand("sudo newgrp docker", false)
-	pkg.RunCommand("sudo groups", false)
-	pkg.RunCommand("source ~/.bashrc", false)
-	pkg.RunCommand("sudo docker version", false)
+	command.Run(fmt.Sprintf("sudo usermod -aG docker %v", user), false)
+	command.Run("sudo newgrp docker", false)
+	command.Run("sudo groups", false)
+	command.Run("source ~/.bashrc", false)
+	command.Run("sudo docker version", false)
 
-	pkg.PrintNotice("Please re-login to leave docker permission error!")
-	pkg.PrintConsole("Docker installed successfully!")
+	logger.Notice("Please re-login to leave docker permission error!")
+	logger.Console("Docker installed successfully!")
 }

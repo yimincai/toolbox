@@ -6,9 +6,10 @@ package main
 
 import (
 	"github.com/yimincai/toolbox/cmd"
+	"github.com/yimincai/toolbox/pkg/logger"
 )
 
 func main() {
-	pkg.PrintBanner("NEIL TOOL BOX")
+	logger.Banner("NEIL TOOL BOX")
 	cmd.Execute()
 }

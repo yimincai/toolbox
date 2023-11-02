@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/yimincai/toolbox/internal/ip"
 )
 
 // ipCmd represents the ip command
@@ -14,7 +15,7 @@ var ipCmd = &cobra.Command{
 	Short: "Get my public ip.",
 	Long:  `Get my public ip.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		pkg.GetPublicIP()
+		ip.GetPublicIP()
 	},
 }
 
