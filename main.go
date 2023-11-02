@@ -6,10 +6,9 @@ package main
 
 import (
 	"github.com/yimincai/toolbox/cmd"
-	"github.com/yimincai/toolbox/tools"
 )
 
 func main() {
-	tools.PrintBanner("NEIL TOOL BOX")
+	pkg.PrintBanner("NEIL TOOL BOX")
 	cmd.Execute()
 }

@@ -12,7 +12,6 @@ import (
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/yimincai/toolbox/tools"
 )
 
 // minioCmd represents the minio command
@@ -43,20 +42,20 @@ var minioCmd = &cobra.Command{
 		}
 
 		if len(args) == 2 {
-			tools.DestinationDir = args[1]
+			pkg.DestinationDir = args[1]
 		}
 
 		switch op {
 		case "Cancel":
 			os.Exit(0)
 		case "Dump":
-			tools.DumpMinioBucket()
+			pkg.DumpMinioBucket()
 		case "Delete":
-			tools.DeleteMinioBucket()
+			pkg.DeleteMinioBucket()
 		case "Restore":
-			tools.MinioRestore()
+			pkg.MinioRestore()
 		case "Upload":
-			tools.UploadMinioBucket()
+			pkg.UploadMinioBucket()
 		default:
 			fmt.Println("Input error.")
 		}
