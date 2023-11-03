@@ -6,6 +6,10 @@ dep:
 build:
 	@GOARCH=arm64 GOOS=darwin go build -o bin/${BINARY_NAME}_darwin_arm64 main.go
 
+build-race:
+	@GOARCH=arm64 GOOS=darwin go build -race -o bin/${BINARY_NAME}_darwin_arm64 main.go
+
+
 run: build
 	@echo $(MAKECMDGOALS)
 	./bin/${BINARY_NAME}_darwin_arm64

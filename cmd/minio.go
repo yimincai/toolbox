@@ -5,14 +5,14 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/yimincai/toolbox/internal/minio"
-	"github.com/yimincai/toolbox/pkg/logger"
 	"os"
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/manifoldco/promptui"
+	"github.com/yimincai/toolbox/internal/minio"
+	"github.com/yimincai/toolbox/pkg/console"
+	"github.com/yimincai/toolbox/pkg/logger"
+
 	"github.com/spf13/cobra"
 )
 
@@ -20,46 +20,53 @@ import (
 var minioCmd = &cobra.Command{
 	Use:   "minio",
 	Short: "minio client tool.",
-	Long:  `minio client tool, you can use it to manage your minio server including: backup, restore, etc.`,
+	Long: `minio client tool, you can use it to manage your minio server including: backup, restore, etc.
+	For example: toolbox minio dump endpoint bucket user password [destinationDir] useSSL(true/false), toolbox minio dump 127.0.0.1:9000 test test 123456 ./backup/minio true, last two parameters are optional.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var op string
-
-		if len(args) == 0 {
-			promptSystem := promptui.Select{
-				Label: "Select your operation",
-				Items: []string{"Dump", "Delete", "Restore", "Upload", "Cancel"},
-			}
-
-			var err error
-
-			_, op, err = promptSystem.Run()
-
-			if err != nil {
-				fmt.Printf("Prompt failed %v\n", err)
-				return
-			}
-		} else {
-			op = firstCharToUpper(args[0])
+		if len(args) < 5 {
+			console.Red("Input error, please check your input.")
+			console.Red("For example: toolbox minio dump endpoint bucket user password [destinationDir] useSSL(true/false), last two parameters are optional.")
+			console.Blue("toolbox minio dump 127.0.0.1:9000 example user password ./backup/minio false")
+			return
 		}
 
-		if len(args) == 2 {
-			minio.DestinationDir = args[1]
-		}
+		if len(args) != 0 {
+			op := firstCharToUpper(args[0])
+			minio.Endpoint = args[1]
+			minio.BucketName = args[2]
+			minio.User = args[3]
+			minio.Password = args[4]
 
-		switch op {
-		case "Cancel":
-			os.Exit(0)
-		case "Dump":
-			minio.DumpBucket()
-		case "Delete":
-			minio.DeleteBucket()
-		case "Restore":
-			minio.RestoreBucket()
-		case "Upload":
-			minio.UploadBucket()
-		default:
-			logger.Red("Input error")
+			if len(args) == 6 {
+				minio.DestinationDir = args[5]
+			}
+
+			if len(args) == 7 {
+				ssl := args[6]
+				if ssl == "true" {
+					minio.UseSSL = true
+				} else if ssl == "false" {
+					minio.UseSSL = false
+				} else {
+					logger.Red("Invalid value for useSSL. Please provide either true or false.")
+				}
+			}
+
+			switch op {
+			case "Cancel":
+				os.Exit(0)
+			case "Dump":
+				minio.DumpBucket(10)
+			case "Delete":
+				minio.DeleteBucket(10)
+			case "Restore":
+				minio.RestoreBucket(10)
+			case "Upload":
+				minio.UploadBucket(10)
+			default:
+				logger.Red("Input error")
+			}
 		}
 	},
 }
@@ -78,14 +85,4 @@ func firstCharToUpper(s string) string {
 
 func init() {
 	rootCmd.AddCommand(minioCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// minioCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// minioCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
