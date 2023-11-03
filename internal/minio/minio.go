@@ -129,7 +129,10 @@ func DumpBucket(worker int) {
 	// Wait for all workers to complete
 	wg.Wait()
 
-	bar.Finish() // Finish the progress bar
+	err = bar.Finish() // Finish the progress bar
+	if err != nil {
+		logger.Red(fmt.Sprint("Error finishing progress bar:", err))
+	}
 	log.Printf("Bucket %s dump completed.", BucketName)
 }
 
@@ -195,7 +198,10 @@ func DeleteBucket(worker int) {
 	// Wait for all workers to complete
 	wg.Wait()
 
-	bar.Finish() // Finish the progress bar
+	err := bar.Finish() // Finish the progress bar
+	if err != nil {
+		logger.Red(fmt.Sprint("Error finishing progress bar:", err))
+	}
 	log.Print("Bucket cleanup completed.")
 }
 
@@ -277,7 +283,10 @@ func UploadBucket(worker int) {
 	close(uploadCh)
 	wg.Wait()
 
-	bar.Finish() // Finish the progress bar
+	err = bar.Finish() // Finish the progress bar
+	if err != nil {
+		logger.Red(fmt.Sprint("Error finishing progress bar:", err))
+	}
 	log.Println("Upload completed.")
 }
 
@@ -340,7 +349,10 @@ func RestoreBucket(worker int) {
 	// Close the channels and wait for all workers to complete
 	close(deleteCh)
 	dwg.Wait()
-	deleteBar.Finish()
+	err := deleteBar.Finish() // Finish the progress bar
+	if err != nil {
+		logger.Red(fmt.Sprint("Error finishing progress bar:", err))
+	}
 
 	var uwg sync.WaitGroup
 	// Start upload workers
@@ -412,7 +424,11 @@ func RestoreBucket(worker int) {
 	// Close the channel and wait for all workers to complete
 	close(uploadCh)
 	uwg.Wait()
-	restoreBar.Finish() // Finish the progress bar
+
+	err = restoreBar.Finish() // Finish the progress bar
+	if err != nil {
+		logger.Red(fmt.Sprint("Error finishing progress bar:", err))
+	}
 
 	log.Println("Bucket cleanup and restoration completed.")
 }
