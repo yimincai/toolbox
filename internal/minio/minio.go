@@ -45,6 +45,7 @@ func newMinioClient(endpoint, user, password string, ssl bool) *minio.Client {
 	return minioClient
 }
 
+// DumpBucket dumps all objects in a bucket to a directory
 func DumpBucket(worker int) {
 	minioClient := newMinioClient(Endpoint, User, Password, UseSSL)
 
@@ -117,7 +118,11 @@ func DumpBucket(worker int) {
 				log.Fatalln("Error listing objects:", object.Err)
 			}
 			downloadCh <- object
-			bar.Add(1) // Increment progress bar
+
+			err = bar.Add(1) // Increment progress bar
+			if err != nil {
+				logger.Red(fmt.Sprint("Error incrementing progress bar:", err))
+			}
 		}
 	}()
 
@@ -128,6 +133,7 @@ func DumpBucket(worker int) {
 	log.Printf("Bucket %s dump completed.", BucketName)
 }
 
+// DeleteBucket deletes all objects in a bucket
 func DeleteBucket(worker int) {
 	minioClient := newMinioClient(Endpoint, User, Password, UseSSL)
 
@@ -178,7 +184,11 @@ func DeleteBucket(worker int) {
 				log.Fatalln("Error listing objects:", object.Err)
 			}
 			deleteCh <- object
-			bar.Add(1) // Increment progress bar
+
+			err := bar.Add(1) // Increment progress bar
+			if err != nil {
+				logger.Red(fmt.Sprint("Error incrementing progress bar:", err))
+			}
 		}
 	}()
 
@@ -189,6 +199,7 @@ func DeleteBucket(worker int) {
 	log.Print("Bucket cleanup completed.")
 }
 
+// UploadBucket uploads all files in a directory to a bucket
 func UploadBucket(worker int) {
 	minioClient := newMinioClient(Endpoint, User, Password, UseSSL)
 
@@ -255,7 +266,11 @@ func UploadBucket(worker int) {
 			continue
 		}
 		uploadCh <- filepath.ToSlash(objectName)
-		bar.Add(1) // Increment progress bar
+
+		err = bar.Add(1) // Increment progress bar
+		if err != nil {
+			logger.Red(fmt.Sprint("Error incrementing progress bar:", err))
+		}
 	}
 
 	// Close the channel and wait for all workers to complete
@@ -266,6 +281,7 @@ func UploadBucket(worker int) {
 	log.Println("Upload completed.")
 }
 
+// RestoreBucket restores a bucket from a directory
 func RestoreBucket(worker int) {
 	minioClient := newMinioClient(Endpoint, User, Password, UseSSL)
 
@@ -314,7 +330,11 @@ func RestoreBucket(worker int) {
 		}
 		objectName := object.Key
 		deleteCh <- objectName
-		deleteBar.Add(1)
+
+		err := deleteBar.Add(1)
+		if err != nil {
+			logger.Red(fmt.Sprint("Error incrementing progress bar:", err))
+		}
 	}
 
 	// Close the channels and wait for all workers to complete
@@ -382,7 +402,11 @@ func RestoreBucket(worker int) {
 			continue
 		}
 		uploadCh <- filepath.ToSlash(objectName)
-		restoreBar.Add(1) // Increment progress bar
+
+		err = restoreBar.Add(1) // Increment progress bar
+		if err != nil {
+			logger.Red(fmt.Sprint("Error incrementing progress bar:", err))
+		}
 	}
 
 	// Close the channel and wait for all workers to complete

@@ -12,6 +12,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// GetPublicIP gets public ip
 func GetPublicIP() {
 	resp, err := http.Get("http://ipecho.net/plain")
 	if err != nil {

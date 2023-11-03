@@ -7,10 +7,10 @@ package command
 import (
 	"bytes"
 	"fmt"
-	_ "github.com/dimiro1/banner/autoload"
-	"github.com/fatih/color"
 	"os"
 	"os/exec"
+
+	"github.com/fatih/color"
 )
 
 // By default, shell will be using bash
@@ -29,6 +29,7 @@ func commandOut(command string, shell string) (string, string, error) {
 	return stdout.String(), stderr.String(), err
 }
 
+// Run executes a command and prints it to stdout
 func Run(command string, showCommand bool) {
 	if showCommand {
 		color.HiBlue("$ %v", command)
@@ -48,6 +49,7 @@ func Run(command string, showCommand bool) {
 	}
 }
 
+// Return executes a command and returns the output
 func Return(command string, showCommand bool) string {
 	if showCommand {
 		color.HiBlue("$ %v", command)

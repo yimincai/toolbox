@@ -6,11 +6,13 @@ package script
 
 import (
 	"fmt"
+
 	"github.com/yimincai/toolbox/internal/command"
 	"github.com/yimincai/toolbox/pkg/logger"
 	"github.com/yimincai/toolbox/utils"
 )
 
+// UbuntuInstallDocker installs docker on ubuntu system
 func UbuntuInstallDocker() {
 	logger.Console("Install Docker ... ")
 
@@ -31,6 +33,6 @@ func UbuntuInstallDocker() {
 	command.Run("source ~/.bashrc", false)
 	command.Run("sudo docker version", false)
 
-	logger.Notice("Please re-login to leave docker permission error!")
+	logger.Yellow("Please re-login to leave docker permission error!")
 	logger.Console("Docker installed successfully!")
 }

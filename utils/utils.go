@@ -5,10 +5,12 @@
 package utils
 
 import (
-	"github.com/fatih/color"
 	"os/user"
+
+	"github.com/fatih/color"
 )
 
+// GetUsername gets the current system username
 func GetUsername() string {
 	u, err := user.Current()
 	if err != nil {
